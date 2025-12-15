@@ -3,8 +3,7 @@ import ApiError from "../../../errors/ApiErrors";
 import prisma from "../../../shared/prisma";
 import { User, UserRole, UserStatus } from "@prisma/client";
 import httpStatus from "http-status";
-import QueryBuilder from "../../../helpars/queryBuilder";
-import { generateCustomId } from "../../../utils/customIdGenerator";
+import QueryBuilder from "../../../helpers/queryBuilder";
 
 const createUser = async (payload: User) => {
   try {
@@ -34,34 +33,15 @@ const createUser = async (payload: User) => {
       }
 
       const hashedPassword: string = await bcrypt.hash(payload.password, 12);
-      const customId = await generateCustomId(prisma.user);
       const userData = {
         ...payload,
         password: hashedPassword,
-        customId,
       };
-      let hospital;
-      if (payload.hospitalId) {
-        hospital = await tx.hospital.findUnique({
-          where: { id: payload.hospitalId },
-        });
-        if (!hospital) {
-          throw new ApiError(httpStatus.BAD_REQUEST, "hospital not found");
-        }
-      }
+
       //create user
       const user = await tx.user.create({
         data: userData,
       });
-      // if user role addminsitrator then add to specific hospital
-      if (user.role === UserRole.ADMINISTRATOR) {
-        if (hospital) {
-          await tx.hospital.update({
-            where: { id: payload.hospitalId! },
-            data: { adminId: user.id },
-          });
-        }
-      }
 
       return { message: "create successfully" };
     });
@@ -80,22 +60,17 @@ const getUserById = async (id: string) => {
     where: { id },
     select: {
       id: true,
-      customId: true,
       firstName: true,
       lastName: true,
       email: true,
       password: true,
       role: true,
-      accessList: true,
-      hospital: true,
-      hospitalId: true,
       phone: true,
       photo: true,
       createdAt: true,
       updatedAt: true,
     },
   });
-  console.log(user);
   return user;
 };
 
@@ -157,7 +132,7 @@ const getAllUsers = async (queryParams: Record<string, any>) => {
       .search(["firstName", "lastName", "email", "phone"])
       .rawFilter({
         role: {
-          not: "SUPER_ADMIN",
+          not: "ADMIN",
         },
         isDeleted: false,
       })
@@ -183,14 +158,11 @@ const getMyProfile = async (userId: string) => {
     where: { id: userId },
     select: {
       id: true,
-      customId: true,
       firstName: true,
       lastName: true,
       email: true,
       phone: true,
       role: true,
-      accessList: true,
-      hospital: true,
       photo: true,
       createdAt: true,
       updatedAt: true,

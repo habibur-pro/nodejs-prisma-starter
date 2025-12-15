@@ -5,8 +5,8 @@ import httpStatus from "http-status";
 import { Secret } from "jsonwebtoken";
 import config from "../../../config";
 import ApiError from "../../../errors/ApiErrors";
-import emailSender from "../../../helpars/emailSender";
-import { jwtHelpers } from "../../../helpars/jwtHelpers";
+import emailSender from "../../../helpers/emailSender";
+import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import { AuthUtils } from "./auth.utils";
 
@@ -41,14 +41,11 @@ const loginUser = async (payload: { email: string; password: string }) => {
   const accessToken = jwtHelpers.generateToken(
     {
       id: userData.id,
-      customId: userData.customId,
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
       role: userData.role,
-      hospitalId: userData.hospitalId || null,
       photo: userData.photo || null,
-      accessList: userData.accessList,
     },
     config.jwt.jwt_secret as Secret,
     (config.jwt.expires_in as string) || "7d"
@@ -57,14 +54,11 @@ const loginUser = async (payload: { email: string; password: string }) => {
   const refreshToken = jwtHelpers.generateToken(
     {
       id: userData.id,
-      customId: userData.customId,
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
       role: userData.role,
       photo: userData.photo || null,
-      hospitalId: userData.hospitalId || null,
-      accessList: userData.accessList,
     },
     config.jwt.refresh_token_secret as Secret,
     config.jwt.refresh_token_expires_in as string

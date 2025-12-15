@@ -5,7 +5,7 @@ import config from "../../config";
 
 import httpStatus from "http-status";
 import ApiError from "../../errors/ApiErrors";
-import { jwtHelpers } from "../../helpars/jwtHelpers";
+import { jwtHelpers } from "../../helpers/jwtHelpers";
 import prisma from "../../shared/prisma";
 
 const auth = (...roles: string[]) => {

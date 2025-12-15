@@ -66,7 +66,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AuthController = {
+export const AuthControllers = {
   loginUser,
   changePassword,
   forgotPassword,

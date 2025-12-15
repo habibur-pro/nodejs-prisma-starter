@@ -1,27 +1,27 @@
-import { Router } from 'express';
-import { imageController } from './Image.controller';
-import fileUploaderCloud from '../../../helpars/fileUploaderCloud';
+import { Router } from "express";
+import { ImageControllers } from "./Image.controller";
+import fileUploaderCloud from "../../../helpers/fileUploaderCloud";
 
 const router = Router();
 
 // create image
 router.post(
-  '/upload',
-  fileUploaderCloud.upload.single('image'),
-  imageController.createImage
+  "/upload",
+  fileUploaderCloud.upload.single("image"),
+  ImageControllers.createImage
 );
 
 // create multiple images
 router.post(
-  '/upload-multiple',
-  fileUploaderCloud.upload.array('images'),
-  imageController.createMultipleImages
+  "/upload-multiple",
+  fileUploaderCloud.upload.array("images"),
+  ImageControllers.createMultipleImages
 );
 
 // delete image
-router.delete('/delete', imageController.deleteImage);
+router.delete("/delete", ImageControllers.deleteImage);
 
 // delete multiple images
-router.delete('/delete-multiple', imageController.deleteMultipleImage);
+router.delete("/delete-multiple", ImageControllers.deleteMultipleImage);
 
-export const imageRoutes = router;
+export const ImageRoutes = router;

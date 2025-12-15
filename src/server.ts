@@ -3,7 +3,7 @@ import app from "./app";
 import config from "./config";
 // import "./helpars/redis";
 import { initializeCronJobs } from "./jobs";
-import { initializeSocket } from "./helpars/socket";
+import { initializeSocket } from "./helpers/socket";
 // import cron from "node-cron";
 const httpServer = createServer(app);
 initializeSocket(httpServer);

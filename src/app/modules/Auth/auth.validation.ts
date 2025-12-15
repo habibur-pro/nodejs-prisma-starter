@@ -25,7 +25,7 @@ const resetPasswordSChema = z.object({
   }),
 });
 
-export const authValidation = {
+export const AuthValidations = {
   changePasswordValidationSchema,
   loginValidationSchema,
   resetPasswordSChema,

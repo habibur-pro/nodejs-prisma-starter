@@ -2,7 +2,8 @@ import express from "express";
 
 import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { UserRoutes } from "../modules/User/user.route";
-import { imageRoutes } from "../modules/Image/Image.route";
+import { ImageRoutes } from "../modules/Image/Image.route";
+import { PostRoutes } from "../modules/Post/Post.route";
 
 // import { paymentRoutes } from "../modules/Payment/payment.route";
 
@@ -20,7 +21,7 @@ const moduleRoutes = [
 
   {
     path: "/files",
-    route: imageRoutes,
+    route: ImageRoutes,
   },
 ];
 

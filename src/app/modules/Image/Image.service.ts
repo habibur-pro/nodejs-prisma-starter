@@ -3,11 +3,11 @@
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
 
-import { uploadFile } from "../../../helpars/uploadFileCloud";
+import { uploadFile } from "../../../helpers/uploadFileCloud";
 import {
   deleteFromCloud,
   deleteMultipleFromCloud,
-} from "../../../helpars/uploadToS3";
+} from "../../../helpers/uploadToS3";
 
 //create image
 const createImage = async (file: Express.Multer.File) => {
@@ -51,7 +51,7 @@ const deleteMultipleImages = async (urls: string[]) => {
   return result;
 };
 
-export const imageService = {
+export const ImageServices = {
   createImage,
   createMultipleImages,
   deleteImage,

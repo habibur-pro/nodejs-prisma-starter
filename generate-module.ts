@@ -357,7 +357,7 @@ const getAll${
 
   return {
     meta: pagination,
-    result,
+    data: result,
   };
 }
 

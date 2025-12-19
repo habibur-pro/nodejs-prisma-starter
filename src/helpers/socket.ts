@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
 import config from "../config";
-import { AiService } from "../app/modules/Ai/ai.service";
 
 let io: Server | null = null;
 
@@ -17,7 +16,7 @@ export const initializeSocket = (server: HTTPServer) => {
   io.on("connection", (socket) => {
     console.log("User connected:", socket?.id);
     socket.on("chat_with_ai", async ({ question, documentId }) => {
-      await AiService.chat(socket.id, documentId, question);
+      // await AiService.chat(socket.id, documentId, question);
     });
     socket.on("disconnect", () => {
       console.log("user disconnect", socket.id);

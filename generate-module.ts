@@ -178,7 +178,7 @@ router.get(
       },
 )
 
-router.put(
+router.patch(
   '/:id',
  //  validateRequest(${
    moduleName.charAt(0).toUpperCase() + moduleName.slice(1)
@@ -218,7 +218,7 @@ import { ${
 
 const create${
         moduleName.charAt(0).toUpperCase() + moduleName.slice(1)
-      }: RequestHandler = catchAsync(async (req, res) => {
+      } = catchAsync(async (req, res) => {
   // const user = req.user
   // req.body.createdBy = user._id
   const result = await ${

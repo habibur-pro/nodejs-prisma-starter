@@ -65,10 +65,21 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
     data: null,
   });
 });
+const signup = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthServices.signup(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Signup success",
+    data: result,
+  });
+});
 
 export const AuthControllers = {
   loginUser,
   changePassword,
   forgotPassword,
   resetPassword,
+  signup,
 };

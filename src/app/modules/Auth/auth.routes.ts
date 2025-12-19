@@ -6,6 +6,12 @@ import { AuthValidations } from "./auth.validation";
 
 const router = express.Router();
 
+router.post(
+  "/signup",
+  validateRequest(AuthValidations.SignupValidation),
+  AuthControllers.signup
+);
+
 // user login route
 router.post(
   "/login",
@@ -13,7 +19,7 @@ router.post(
   AuthControllers.loginUser
 );
 
-router.put(
+router.post(
   "/change-password",
   validateRequest(AuthValidations.changePasswordValidationSchema),
   auth(),

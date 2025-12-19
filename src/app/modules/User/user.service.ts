@@ -5,56 +5,6 @@ import { User, UserRole, UserStatus } from "@prisma/client";
 import httpStatus from "http-status";
 import QueryBuilder from "../../../helpers/queryBuilder";
 
-const createUser = async (payload: User) => {
-  try {
-    const result = await prisma.$transaction(async (tx) => {
-      const existingUser = await tx.user.findFirst({
-        where: { email: payload.email },
-      });
-      if (existingUser) {
-        throw new ApiError(httpStatus.CONFLICT, " email already exists");
-      }
-
-      const phoneExist = await tx.user.findFirst({
-        where: { phone: payload.phone },
-      });
-      if (phoneExist) {
-        throw new ApiError(httpStatus.CONFLICT, "phone already exists");
-      }
-
-      if (!payload.password) {
-        throw new ApiError(
-          httpStatus.BAD_REQUEST,
-          "a temporary password is required"
-        );
-      }
-      if (existingUser) {
-        throw new ApiError(400, "This  phone or email already exists");
-      }
-
-      const hashedPassword: string = await bcrypt.hash(payload.password, 12);
-      const userData = {
-        ...payload,
-        password: hashedPassword,
-      };
-
-      //create user
-      const user = await tx.user.create({
-        data: userData,
-      });
-
-      return { message: "create successfully" };
-    });
-    return result;
-  } catch (error: any) {
-    console.log("error", error);
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      error?.message || "something went wrong"
-    );
-  }
-};
-
 const getUserById = async (id: string) => {
   const user = await prisma.user.findUnique({
     where: { id },
@@ -153,7 +103,7 @@ const getAllUsers = async (queryParams: Record<string, any>) => {
 };
 
 // get user profile
-const getMyProfile = async (userId: string) => {
+const getMe = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -184,12 +134,11 @@ const updateMe = async (id: string, payload: User) => {
 };
 
 export const UserService = {
-  createUser,
   getUserById,
   updateUser,
   deleteUser,
   getAllUsers,
   blockUser,
   updateMe,
-  getMyProfile,
+  getMe,
 };

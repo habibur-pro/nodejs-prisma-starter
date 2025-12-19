@@ -11,14 +11,7 @@ const router = express.Router();
 
 // const uploadSingle = fileUploader.upload.single("profileImage");
 
-// register user
-router.post(
-  "/",
-  auth(UserRole.SUPER_ADMIN),
-  validateRequest(UserValidation.CreateUserValidationSchema),
-  UserController.createUser
-);
-router.get("/get-me", auth(), UserController.getMyProfile);
+router.get("/get-me", auth(), UserController.getMe);
 // get single user
 router.get("/:id", auth(), UserController.getUserById);
 router.patch(
@@ -27,24 +20,16 @@ router.patch(
   fileUploaderCloud.upload.single("profileImage"),
   parseBodyData,
   validateRequest(UserValidation.updateMeSchema),
-  UserController.updateMyProfile
-);
-// update user
-router.patch(
-  "/:id",
-  auth(UserRole.SUPER_ADMIN),
-  validateRequest(UserValidation.userUpdateSchema),
-  UserController.updateUser
+  UserController.updateMe
 );
 
 // block user
-router.post("/:id", auth(UserRole.SUPER_ADMIN), UserController.blockUser);
+router.post("/:id", auth(UserRole.ADMIN), UserController.blockUser);
 
-router.patch("/:id", auth(), UserController.updateUser);
 // delete user
-router.delete("/:id", auth(UserRole.SUPER_ADMIN), UserController.deleteUser);
+router.delete("/:id", auth(UserRole.ADMIN), UserController.deleteUser);
 
 // get all user
-router.get("/", auth(UserRole.SUPER_ADMIN), UserController.getAllUsers);
+router.get("/", auth(UserRole.ADMIN), UserController.getAllUsers);
 
 export const UserRoutes = router;

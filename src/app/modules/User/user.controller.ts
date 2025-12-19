@@ -6,16 +6,6 @@ import sendResponse from "../../../shared/sendResponse";
 import { User } from "@prisma/client";
 import { ImageServices } from "../Image/Image.service";
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.createUser(req.body);
-  sendResponse(res, {
-    statusCode: httpStatus.CREATED,
-    success: true,
-    message: "User Created Successfully",
-    data: result,
-  });
-});
-
 const getUserById = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.id;
   console.log(userId);
@@ -82,7 +72,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
+const updateMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
   const result = await UserService.updateMe(userId, req.body);
   sendResponse(res, {
@@ -93,9 +83,9 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 // get user profile
-const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+const getMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
-  const result = await UserService.getMyProfile(userId as string);
+  const result = await UserService.getMe(userId as string);
   sendResponse(res, {
     success: true,
     statusCode: 201,
@@ -105,12 +95,11 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const UserController = {
-  createUser,
   getUserById,
   updateUser,
   deleteUser,
   getAllUsers,
   blockUser,
-  updateMyProfile,
-  getMyProfile,
+  updateMe,
+  getMe,
 };

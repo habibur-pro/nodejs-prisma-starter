@@ -1,5 +1,5 @@
 import ApiError from "../errors/ApiErrors";
-import { uploadFileToSpace } from "./uploadToS3";
+import { uploadFileToS3 } from "./uploadToS3";
 
 export const uploadFile = async (
   file: Express.Multer.File,
@@ -8,5 +8,5 @@ export const uploadFile = async (
   if (!file) {
     throw new ApiError(400, `${fileName} image is required`);
   }
-  return await uploadFileToSpace(file);
+  return await uploadFileToS3(file);
 };

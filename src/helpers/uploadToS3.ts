@@ -19,7 +19,7 @@ const s3 = new S3Client({
 });
 
 // Function to upload a file to DigitalOcean Space
-export const uploadFileToSpace = async (
+export const uploadFileToS3 = async (
   // eslint-disable-next-line no-undef
   file: Express.Multer.File
 ) => {

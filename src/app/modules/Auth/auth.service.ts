@@ -31,7 +31,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
-    userData.password
+    userData.password,
   );
 
   if (!isCorrectPassword) {
@@ -48,7 +48,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
       photo: userData.photo || null,
     },
     config.jwt.jwt_secret as Secret,
-    (config.jwt.expires_in as string) || "7d"
+    (config.jwt.expires_in as string) || "7d",
   );
 
   const refreshToken = jwtHelpers.generateToken(
@@ -61,7 +61,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
       photo: userData.photo || null,
     },
     config.jwt.refresh_token_secret as Secret,
-    config.jwt.refresh_token_expires_in as string
+    config.jwt.refresh_token_expires_in as string,
   );
 
   return {
@@ -84,7 +84,7 @@ const forgotPassword = async (payload: { email: string }) => {
   const resetPassToken = jwtHelpers.generateToken(
     { email: userData.email, role: userData.role },
     config.jwt.reset_pass_secret as Secret,
-    config.jwt.reset_pass_token_expires_in as string
+    config.jwt.reset_pass_token_expires_in as string,
   );
 
   const resetPassLink =
@@ -114,7 +114,7 @@ const resetPassword = async (payload: {
 
   const isValidToken = jwtHelpers.verifyToken(
     payload.token,
-    config.jwt.reset_pass_secret as Secret
+    config.jwt.reset_pass_secret as Secret,
   );
 
   if (!isValidToken) {
@@ -142,7 +142,7 @@ const resetPassword = async (payload: {
 const changePassword = async (
   userId: string,
   newPassword: string,
-  oldPassword: string
+  oldPassword: string,
 ) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -191,7 +191,7 @@ const signup = async (payload: User) => {
       if (!payload.password) {
         throw new ApiError(
           httpStatus.BAD_REQUEST,
-          "a temporary password is required"
+          "a temporary password is required",
         );
       }
       if (existingUser) {
@@ -209,6 +209,19 @@ const signup = async (payload: User) => {
         data: userData,
       });
 
+      const randomOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+
+      const html = AuthUtils.createEmailVerificationTemplate(randomOtp);
+
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          otp: randomOtp,
+          otpExpireAt: otpExpiry,
+        },
+      });
+      await emailSender("Verify your email", user.email, html);
       return { message: "signing up successfully" };
     });
     return result;
@@ -216,7 +229,7 @@ const signup = async (payload: User) => {
     console.log("error", error);
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      error?.message || "something went wrong"
+      error?.message || "something went wrong",
     );
   }
 };

@@ -12,14 +12,15 @@ function main() {
   const server = httpServer.listen(Number(config.port), () => {
     console.log(
       "Server is running on port ==>",
-      `http://localhost:${config.port}`
+      `http://localhost:${config.port}`,
     );
 
     // initializeCronJobs();
   });
 
   // Graceful shutdown function
-  const exitHandler = () => {
+  const exitHandler = (errOrReason: any) => {
+    console.error("FATAL:", errOrReason);
     if (server) {
       server.close(() => {
         console.log("Server closed");
